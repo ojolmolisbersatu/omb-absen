@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5f47">
+<title>Absensi | OMB</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">⚡ OMB <small>ABSENSI KEHADIRAN</small></div>
+  </div>
+</header>
+
+<main class="container attendance-page">
+  <section class="hero attendance-hero">
+    <div class="eyebrow">OMB ABSENSI</div>
+    <h1 id="eventTitle">Memuat sesi...</h1>
+    <p id="eventSub"></p>
+  </section>
+
+  <div id="message" class="notice hidden"></div>
+  <div id="sessionClosed" class="notice error hidden">Sesi absensi ini tidak aktif atau sudah ditutup.</div>
+
+  <div id="sessionPicker" class="hidden">
+    <div class="section-heading">
+      <div><h2>Pilih sesi</h2><p class="step-desc">Pilih sesi yang sedang berlangsung.</p></div>
+    </div>
+    <div id="activeSessionList" class="loading">Memuat sesi aktif...</div>
+  </div>
+
+  <div id="formArea" class="hidden">
+    <div class="attendance-flow">
+
+      <section class="step-card flow-card" id="stepMember">
+        <div class="flow-head">
+          <div class="step-icon">1</div>
+          <div><h3>Identitas anggota</h3><p class="step-desc">Cari nama atau ID anggota OMB.</p></div>
+          <span id="memberStatus" class="flow-status">Belum dipilih</span>
+        </div>
+        <div id="memberSearchWrap">
+          <div class="search-input-wrap">
+            <span>⌕</span>
+            <input id="memberSearch" autocomplete="off" placeholder="Cari nama / ID anggota...">
+          </div>
+          <div id="searchResults" class="search-results"></div>
+        </div>
+        <div id="pickedMemberBox"></div>
+      </section>
+
+      <section class="step-card flow-card is-locked" id="stepLocation">
+        <div class="flow-head">
+          <div class="step-icon">2</div>
+          <div><h3>Verifikasi lokasi</h3><p class="step-desc">GPS akan mencocokkan posisi Anda dengan radius sesi.</p></div>
+          <span id="locationStatus" class="flow-status">Menunggu</span>
+        </div>
+        <div id="gpsResult" class="gps-result hidden"></div>
+        <button type="button" id="checkLocationBtn" class="btn secondary full" disabled>📍 Cek lokasi saya</button>
+      </section>
+
+      <section class="step-card flow-card is-locked" id="stepPhoto">
+        <div class="flow-head">
+          <div class="step-icon">3</div>
+          <div><h3>Verifikasi wajah</h3><p class="step-desc">Bukan pengenalan wajah. Sistem hanya mengecek posisi dan kestabilan wajah.</p></div>
+          <span id="faceStatus" class="flow-status">Menunggu</span>
+        </div>
+
+        <div id="faceVerifier" class="face-verifier">
+          <div class="face-instruction">Pegang HP Anda dengan tegak</div>
+          <div class="face-frame-wrap">
+            <div id="faceFrame" class="face-frame status-red">
+              <video id="faceVideo" playsinline autoplay muted></video>
+              <canvas id="faceCanvas" class="hidden"></canvas>
+              <img id="facePreview" class="hidden" alt="Hasil foto absensi">
+              <div id="faceCountdown" class="face-countdown hidden">2.0</div>
+            </div>
+          </div>
+          <div id="faceFeedback" class="face-feedback red">Arahkan wajah ke dalam lingkaran</div>
+          <div class="face-note">Kamera hanya digunakan untuk mengambil foto bukti kehadiran.</div>
+          <button type="button" id="retakeBtn" class="btn secondary face-retake hidden">↻ Foto Ulang</button>
+          <div id="faceLoading" class="face-loading hidden">Menyiapkan kamera dan deteksi wajah...</div>
+        </div>
+      </section>
+
+      <section class="submit-panel">
+        <div id="submitSummary" class="submit-summary">
+          <span class="summary-dot"></span>
+          <div><strong>Siap dikirim?</strong><small>Lengkapi anggota, lokasi, dan foto wajah.</small></div>
+        </div>
+        <button id="submitBtn" class="submit-cta full" type="button" disabled>✓ KIRIM ABSENSI</button>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/drive-upload.js"></script>
+<script src="js/face-verification.js"></script>
+<script src="js/member.js"></script>
+</body>
+</html>
