@@ -1,0 +1,39 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kehadiran | OMB</title><link rel="stylesheet" href="../css/style.css"></head><body>
+<header class="topbar"><div class="topbar-inner">
+<div class="brand">⚡ OMB <small>ABSENSI V1 · ADMIN</small></div>
+<nav class="nav nav-desktop"><a href="index.html">Dashboard</a><a href="events.html">Event Manager</a><button onclick="logout()">Logout</button></nav>
+<button class="nav-logout-mobile" onclick="logout()" aria-label="Logout">⎋</button>
+</div></header>
+
+<main class="container">
+<section class="hero"><h1>Daftar Kehadiran</h1><p id="sessionInfo">Memuat informasi session...</p></section>
+<div id="message" class="notice hidden"></div>
+
+<div class="grid-stats">
+<div class="stat"><span>Total Absen</span><b id="statTotal">—</b></div>
+<div class="stat"><span>Lokasi Valid</span><b id="statValid">—</b></div>
+<div class="stat"><span>Lokasi Tidak Valid</span><b id="statInvalid">—</b></div>
+<div class="stat"><span>Anggota Unik</span><b id="statUnique">—</b></div>
+</div>
+
+<div class="filters-bar">
+<select id="filterValid"><option value="">Semua Lokasi</option><option value="valid">Lokasi Valid</option><option value="invalid">Lokasi Tidak Valid</option></select>
+<input id="filterSearch" placeholder="Cari nama/ID anggota...">
+<button class="secondary" id="exportBtn">⬇️ Export CSV</button>
+</div>
+
+<div class="table-scroll">
+<table class="att-table">
+<thead><tr><th>Foto</th><th>Member ID</th><th>Waktu</th><th>Jarak (m)</th><th>Akurasi GPS</th><th>Lokasi</th><th>Status</th></tr></thead>
+<tbody id="attBody"><tr><td colspan="7" class="loading">Memuat data...</td></tr></tbody>
+</table>
+</div>
+</main>
+
+<nav class="bottom-nav">
+<a href="index.html"><span class="ic">🏠</span>Dashboard</a>
+<a href="events.html"><span class="ic">📅</span>Event</a>
+<button onclick="logout()"><span class="ic">⎋</span>Keluar</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../supabase.js"></script><script src="../js/auth.js"></script><script src="../js/attendance-admin.js"></script></body></html>
