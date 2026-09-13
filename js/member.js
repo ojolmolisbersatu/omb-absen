@@ -67,6 +67,27 @@ function hideSubmitProgress() {
   $('submitBtn')?.classList.remove('hidden');
 }
 
+function setStage(stage) {
+  const card = document.querySelector('.attendance-app-card');
+  if (!card) return;
+  card.classList.remove('stage-member','stage-location','stage-face');
+  card.classList.add('stage-' + stage);
+}
+
+async function checkAlreadyAbsent() {
+  if (!pickedMember || !sessionData) return false;
+  const { data, error } = await supabaseClient.from('attendance').select('id,created_at').eq('session_id', sessionData.id).eq('member_id', pickedMember.id_anggota).limit(1);
+  if (error) return false;
+  if (data?.length) {
+    $('pickedMemberBox').insertAdjacentHTML('beforeend', '<div class="already-absent">✓ Anda sudah absen di sesi ini.</div>');
+    $('checkLocationBtn').disabled = true;
+    $('submitBtn').disabled = true;
+    setFlowStatus('memberStatus', 'Sudah absen', 'ok');
+    return true;
+  }
+  return false;
+}
+
 function updateSubmitState() {
   const ready = !!(pickedMember && gpsResultData?.valid && photoFile);
   $('submitBtn').disabled = !ready;
@@ -106,6 +127,7 @@ async function loadSession() {
   }
 
   $('formArea').classList.remove('hidden');
+  document.querySelector('.attendance-app-card')?.classList.add('stage-member');
   $('summaryLocationRow')?.classList.add('is-locked');
   $('stepPhoto')?.classList.add('is-locked');
 }
@@ -185,7 +207,8 @@ async function searchMember(q) {
       $('locationSummary').textContent = 'Tekan cek lokasi untuk melanjutkan.';
       resetFace();
       updateSubmitState();
-      $('summaryLocationRow').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setStage('location');
+      checkAlreadyAbsent();
     });
   });
 }
@@ -208,6 +231,7 @@ function renderPickedMember() {
     setFlowStatus('memberStatus', 'Belum dipilih');
     $('memberSummary').textContent = 'Cari nama atau ID anggota OMB.';
     $('summaryLocationRow').classList.add('is-locked');
+    setStage('member');
     $('checkLocationBtn').disabled = true;
     $('gpsResult').classList.add('hidden');
     setFlowStatus('locationStatus', 'Menunggu');
@@ -262,9 +286,11 @@ function checkLocation() {
       if (valid) {
         $('summaryLocationRow').classList.remove('is-locked');
         $('stepPhoto').classList.remove('is-locked');
+        setStage('face');
         setFlowStatus('faceStatus', 'Siap');
         if (!faceVerifier) initFaceVerifier();
       } else {
+        setStage('location');
         $('stepPhoto').classList.add('is-locked');
         setFlowStatus('faceStatus', 'Menunggu');
         if (faceVerifier) faceVerifier.stop();
