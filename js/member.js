@@ -32,6 +32,41 @@ function setFlowStatus(id, text, type='') {
   el.className = 'flow-status' + (type ? ' ' + type : '');
 }
 
+function setSubmitProgress(step, state='done') {
+  const map = {
+    member: 'progressMember',
+    location: 'progressLocation',
+    photo: 'progressPhoto',
+    save: 'progressSave'
+  };
+  const el = $(map[step]);
+  if (!el) return;
+  el.classList.remove('active', 'done');
+  if (state === 'active') {
+    el.classList.add('active');
+    el.querySelector('span').textContent = '↻';
+  } else {
+    el.classList.add('done');
+    el.querySelector('span').textContent = '✓';
+  }
+}
+
+function showSubmitProgress() {
+  $('submitSummary')?.classList.add('hidden');
+  $('submitBtn')?.classList.add('hidden');
+  $('submitProgress')?.classList.remove('hidden');
+  setSubmitProgress('member', 'done');
+  setSubmitProgress('location', 'done');
+  setSubmitProgress('photo', 'done');
+  setSubmitProgress('save', 'active');
+}
+
+function hideSubmitProgress() {
+  $('submitProgress')?.classList.add('hidden');
+  $('submitSummary')?.classList.remove('hidden');
+  $('submitBtn')?.classList.remove('hidden');
+}
+
 function updateSubmitState() {
   const ready = !!(pickedMember && gpsResultData?.valid && photoFile);
   $('submitBtn').disabled = !ready;
@@ -71,8 +106,8 @@ async function loadSession() {
   }
 
   $('formArea').classList.remove('hidden');
-  setStepState('stepLocation', 'locked');
-  setStepState('stepPhoto', 'locked');
+  $('summaryLocationRow')?.classList.add('is-locked');
+  $('stepPhoto')?.classList.add('is-locked');
 }
 
 async function loadActiveSessionList() {
@@ -141,15 +176,16 @@ async function searchMember(q) {
       renderPickedMember();
       box.innerHTML = '';
       $('memberSearch').value = '';
-      setStepState('stepMember', 'done');
       setFlowStatus('memberStatus', 'Terverifikasi', 'ok');
-      setStepState('stepLocation', 'ready');
+      $('memberSummary').textContent = `${pickedMember.nama} · ${pickedMember.id_anggota}`;
+      $('summaryLocationRow').classList.remove('is-locked');
       $('checkLocationBtn').disabled = false;
       $('gpsResult').classList.add('hidden');
       setFlowStatus('locationStatus', 'Siap dicek');
+      $('locationSummary').textContent = 'Tekan cek lokasi untuk melanjutkan.';
       resetFace();
       updateSubmitState();
-      $('stepLocation').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      $('summaryLocationRow').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
 }
@@ -169,14 +205,15 @@ function renderPickedMember() {
     gpsResultData = null;
     photoFile = null;
     renderPickedMember();
-    setStepState('stepMember', 'ready');
     setFlowStatus('memberStatus', 'Belum dipilih');
-    setStepState('stepLocation', 'locked');
-    setStepState('stepPhoto', 'locked');
+    $('memberSummary').textContent = 'Cari nama atau ID anggota OMB.';
+    $('summaryLocationRow').classList.add('is-locked');
     $('checkLocationBtn').disabled = true;
     $('gpsResult').classList.add('hidden');
     setFlowStatus('locationStatus', 'Menunggu');
+    $('locationSummary').textContent = 'Lokasi akan dicocokkan dengan radius sesi.';
     setFlowStatus('faceStatus', 'Menunggu');
+    $('stepPhoto').classList.add('is-locked');
     resetFace();
     updateSubmitState();
   });
@@ -217,16 +254,19 @@ function checkLocation() {
 
       btn.disabled = false;
       btn.textContent = valid ? '📍 Cek ulang lokasi' : '📍 Coba lagi';
-      setFlowStatus('locationStatus', valid ? 'Valid' : 'Tidak valid', valid ? 'ok' : 'bad');
+      setFlowStatus('locationStatus', valid ? 'Terverifikasi' : 'Tidak valid', valid ? 'ok' : 'bad');
+      $('locationSummary').textContent = valid
+        ? `✓ Lokasi sesuai · ${Math.round(distance)} m dari titik absensi`
+        : 'Lokasi belum sesuai dengan radius sesi.';
 
       if (valid) {
-        setStepState('stepLocation', 'done');
-        setStepState('stepPhoto', 'ready');
+        $('summaryLocationRow').classList.remove('is-locked');
+        $('stepPhoto').classList.remove('is-locked');
         setFlowStatus('faceStatus', 'Siap');
         if (!faceVerifier) initFaceVerifier();
       } else {
-        setStepState('stepLocation', 'ready');
-        setStepState('stepPhoto', 'locked');
+        $('stepPhoto').classList.add('is-locked');
+        setFlowStatus('faceStatus', 'Menunggu');
         if (faceVerifier) faceVerifier.stop();
       }
       updateSubmitState();
@@ -287,7 +327,9 @@ function initFaceVerifier() {
       };
       const [text, type] = map[status] || ['Menunggu', ''];
       setFlowStatus('faceStatus', text, type);
-      setStepState('stepPhoto', status === 'captured' ? 'done' : 'ready');
+      if (status === 'captured') {
+        $('stepPhoto').classList.remove('is-locked');
+      }
     },
     onCaptured: (blob) => {
       photoFile = new File([blob], `${pickedMember?.id_anggota || 'absensi'}-${Date.now()}.jpg`, { type: 'image/jpeg' });
@@ -318,13 +360,13 @@ async function submitAttendance() {
   if (!pickedMember || !gpsResultData?.valid || !photoFile) return;
   const btn = $('submitBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ MENGIRIM...';
+  showSubmitProgress();
 
   try {
     const folderName = eventData ? `${eventData.name} - ${eventData.event_date}` : 'Lainnya';
     const upload = await uploadPhotoToDrive(photoFile, pickedMember.id_anggota, folderName);
     if (!upload.ok) throw new Error(upload.error || 'Upload foto gagal.');
-
+    setSubmitProgress('save', 'active');
     const payload = {
       event_id: sessionData.event_id,
       session_id: sessionData.id,
@@ -342,9 +384,11 @@ async function submitAttendance() {
 
     const { error } = await supabaseClient.from('attendance').insert(payload);
     if (error) throw error;
+    setSubmitProgress('save', 'done');
     if (faceVerifier) faceVerifier.stop();
     showSuccess();
   } catch (err) {
+    hideSubmitProgress();
     showMessage($('message'), 'Gagal mengirim absensi: ' + (err.message || err), 'error');
     btn.disabled = false;
     btn.textContent = '✓ KIRIM ABSENSI';
