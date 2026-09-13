@@ -340,10 +340,8 @@ function initFaceVerifier() {
     canvasId: 'faceCanvas',
     frameId: 'faceFrame',
     feedbackId: 'faceFeedback',
-    countdownId: 'faceCountdown',
     previewId: 'facePreview',
     loadingId: 'faceLoading',
-    retakeId: 'retakeBtn',
     onStatus: (status) => {
       const map = {
         red: ['Mengarahkan', 'bad'],
@@ -359,7 +357,8 @@ function initFaceVerifier() {
     },
     onCaptured: (blob) => {
       photoFile = new File([blob], `${pickedMember?.id_anggota || 'absensi'}-${Date.now()}.jpg`, { type: 'image/jpeg' });
-      updateSubmitState();
+      // Setelah foto valid, tombol tidak ditampilkan lagi. Pengiriman otomatis.
+      submitAttendance();
     }
   });
   faceVerifier.start();
@@ -430,9 +429,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   $('checkLocationBtn').addEventListener('click', checkLocation);
   $('submitBtn').addEventListener('click', submitAttendance);
-  $('retakeBtn').addEventListener('click', () => {
-    photoFile = null;
-    if (faceVerifier) faceVerifier.retake();
-    updateSubmitState();
-  });
 });
