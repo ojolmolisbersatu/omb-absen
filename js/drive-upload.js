@@ -1,7 +1,7 @@
 // OMB ABSENSI V1 - Upload foto absensi ke Google Drive via Google Apps Script Web App
 // Isi kedua nilai ini setelah setup Apps Script selesai (lihat google-apps-script/README.md)
-const GAS_WEB_APP_URL = 'PASTE_URL_WEB_APP_DI_SINI';
-const UPLOAD_SECRET = 'PASTE_SECRET_KEY_DI_SINI';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyWWtrKYIWUCTYcFdaHF8Vg97keifI87thkkX_oP9UsLDhzO6k2lmnfwO616QyC26sxCw/exec';
+const UPLOAD_SECRET = 'oMb26_g4uLbRo0JgNlUph4FoLlLLoWw';
 
 /**
  * Upload foto (File object dari <input type="file">) ke Google Drive.
