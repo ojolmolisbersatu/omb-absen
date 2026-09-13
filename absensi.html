@@ -8,19 +8,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">⚡ OMB <small>ABSENSI KEHADIRAN</small></div>
-  </div>
-</header>
-
 <main class="container attendance-page">
-  <section class="hero attendance-hero">
-    <div class="eyebrow">OMB ABSENSI</div>
-    <h1 id="eventTitle">Memuat sesi...</h1>
-    <p id="eventSub"></p>
-  </section>
-
   <div id="message" class="notice hidden"></div>
   <div id="sessionClosed" class="notice error hidden">Sesi absensi ini tidak aktif atau sudah ditutup.</div>
 
@@ -32,38 +20,55 @@
   </div>
 
   <div id="formArea" class="hidden">
-    <div class="attendance-flow">
+    <section class="attendance-app-card">
+      <div class="app-event-head">
+        <div class="eyebrow">OMB ABSENSI</div>
+        <h1 id="eventTitle">Memuat sesi...</h1>
+        <p id="eventSub"></p>
+      </div>
 
-      <section class="step-card flow-card" id="stepMember">
-        <div class="flow-head">
-          <div class="step-icon">1</div>
-          <div><h3>Identitas anggota</h3><p class="step-desc">Cari nama atau ID anggota OMB.</p></div>
+      <div class="verification-summary">
+        <div class="summary-row" id="summaryMemberRow">
+          <div class="summary-copy">
+            <strong>Identitas anggota</strong>
+            <span id="memberSummary">Cari nama atau ID anggota OMB.</span>
+          </div>
           <span id="memberStatus" class="flow-status">Belum dipilih</span>
         </div>
-        <div id="memberSearchWrap">
-          <div class="search-input-wrap">
-            <span>⌕</span>
-            <input id="memberSearch" autocomplete="off" placeholder="Cari nama / ID anggota...">
-          </div>
-          <div id="searchResults" class="search-results"></div>
-        </div>
-        <div id="pickedMemberBox"></div>
-      </section>
 
-      <section class="step-card flow-card is-locked" id="stepLocation">
-        <div class="flow-head">
-          <div class="step-icon">2</div>
-          <div><h3>Verifikasi lokasi</h3><p class="step-desc">GPS akan mencocokkan posisi Anda dengan radius sesi.</p></div>
+        <div class="summary-row is-locked" id="summaryLocationRow">
+          <div class="summary-copy">
+            <strong>Verifikasi lokasi</strong>
+            <span id="locationSummary">Lokasi akan dicocokkan dengan radius sesi.</span>
+          </div>
           <span id="locationStatus" class="flow-status">Menunggu</span>
         </div>
+      </div>
+
+      <div id="memberSearchWrap" class="member-search-section">
+        <div class="search-input-wrap">
+          <span>⌕</span>
+          <input id="memberSearch" autocomplete="off" placeholder="Cari nama / ID anggota...">
+        </div>
+        <div id="searchResults" class="search-results"></div>
+        <div id="pickedMemberBox"></div>
+      </div>
+
+      <div class="location-action">
         <div id="gpsResult" class="gps-result hidden"></div>
         <button type="button" id="checkLocationBtn" class="btn secondary full" disabled>📍 Cek lokasi saya</button>
-      </section>
+      </div>
 
-      <section class="step-card flow-card is-locked" id="stepPhoto">
-        <div class="flow-head">
-          <div class="step-icon">3</div>
-          <div><h3>Verifikasi wajah</h3><p class="step-desc">Bukan pengenalan wajah. Sistem hanya mengecek posisi dan kestabilan wajah.</p></div>
+      <div class="next-step-divider">
+        <span>Langkah berikutnya</span>
+      </div>
+
+      <section class="face-section is-locked" id="stepPhoto">
+        <div class="face-section-head">
+          <div>
+            <h2>Verifikasi wajah</h2>
+            <p>Bukan pengenalan wajah. Sistem hanya mengecek posisi dan kestabilan wajah.</p>
+          </div>
           <span id="faceStatus" class="flow-status">Menunggu</span>
         </div>
 
@@ -74,7 +79,8 @@
               <video id="faceVideo" playsinline autoplay muted></video>
               <canvas id="faceCanvas" class="hidden"></canvas>
               <img id="facePreview" class="hidden" alt="Hasil foto absensi">
-              <div id="faceCountdown" class="face-countdown hidden">2.0</div>
+              <div class="face-detect-ring" aria-hidden="true"></div>
+              <div id="faceCountdown" class="face-countdown hidden"></div>
             </div>
           </div>
           <div id="faceFeedback" class="face-feedback red">Arahkan wajah ke dalam lingkaran</div>
@@ -84,14 +90,25 @@
         </div>
       </section>
 
-      <section class="submit-panel">
+      <div class="app-submit-area">
         <div id="submitSummary" class="submit-summary">
           <span class="summary-dot"></span>
           <div><strong>Siap dikirim?</strong><small>Lengkapi anggota, lokasi, dan foto wajah.</small></div>
         </div>
         <button id="submitBtn" class="submit-cta full" type="button" disabled>✓ KIRIM ABSENSI</button>
-      </section>
-    </div>
+
+        <div id="submitProgress" class="submit-progress hidden" aria-live="polite">
+          <div class="submit-spinner"></div>
+          <div class="submit-progress-title">Sedang memverifikasi kehadiran...</div>
+          <div class="submit-progress-list">
+            <div id="progressMember" class="progress-item"><span>✓</span> Anggota terverifikasi</div>
+            <div id="progressLocation" class="progress-item"><span>✓</span> Lokasi terverifikasi</div>
+            <div id="progressPhoto" class="progress-item"><span>✓</span> Foto bukti siap</div>
+            <div id="progressSave" class="progress-item active"><span>↻</span> Menyimpan ke sistem...</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
 

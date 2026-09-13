@@ -1,19 +1,11 @@
-# OMB Absensi V1 Modern — Changelog
+# OMB Absensi V1 — App Style Update
 
-## Member attendance
-- Modern clean single-page flow.
-- Member search as first step.
-- GPS step unlocked after member selection.
-- Face verification step unlocked after valid GPS.
-- MediaPipe Face Detection via CDN.
-- Red/yellow/green real-time face feedback.
-- 35% / 70% face-size thresholds.
-- 2-second stability hold and automatic capture.
-- Retake photo without a file input field.
-- JPEG compression to 720x720 before upload.
-- Sticky submit CTA so the user does not need to scroll up/down.
-- Success receipt after attendance submission.
-
-## Admin/backend
-- Existing admin pages, Supabase schema, event/session logic, and Drive upload flow are preserved.
-- No new database tables are required.
+- Halaman sesi absensi dibuat seperti satu halaman aplikasi: tanpa header hijau.
+- Judul acara, identitas anggota, dan verifikasi lokasi berada dalam satu card utama.
+- Nomor langkah 1/2/3 dihilangkan.
+- Verifikasi wajah tetap menjadi langkah berikutnya setelah lokasi valid.
+- Countdown angka di kamera dihilangkan.
+- Saat wajah valid, border hijau memiliki animasi berputar seperti proses deteksi.
+- Hold internal verifikasi wajah menjadi 3 detik tanpa menampilkan angka detik.
+- Tombol KIRIM ABSENSI menampilkan panel loading: anggota → lokasi → foto → menyimpan ke sistem.
+- Loading mengikuti proses upload Drive dan insert Supabase yang sebenarnya, tanpa delay palsu.
