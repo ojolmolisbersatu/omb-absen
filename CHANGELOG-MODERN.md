@@ -1,11 +1,8 @@
-# OMB Absensi V1 — App Style Update
+# OMB Absensi V1 — UI Fix
 
-- Halaman sesi absensi dibuat seperti satu halaman aplikasi: tanpa header hijau.
-- Judul acara, identitas anggota, dan verifikasi lokasi berada dalam satu card utama.
-- Nomor langkah 1/2/3 dihilangkan.
-- Verifikasi wajah tetap menjadi langkah berikutnya setelah lokasi valid.
-- Countdown angka di kamera dihilangkan.
-- Saat wajah valid, border hijau memiliki animasi berputar seperti proses deteksi.
-- Hold internal verifikasi wajah menjadi 3 detik tanpa menampilkan angka detik.
-- Tombol KIRIM ABSENSI menampilkan panel loading: anggota → lokasi → foto → menyimpan ke sistem.
-- Loading mengikuti proses upload Drive dan insert Supabase yang sebenarnya, tanpa delay palsu.
+- Alur member dibuat satu layar: pilih anggota → verifikasi lokasi → verifikasi wajah → kirim.
+- Tidak memakai `scrollIntoView` dan bagian wajah disembunyikan sampai lokasi valid.
+- Kamera tidak mirror.
+- Menghapus ketergantungan dynamic import MediaPipe CDN yang menyebabkan `Failed to fetch dynamically imported module`.
+- Verifikasi kamera ringan: kamera dibuka, posisi diarahkan, foto otomatis setelah hitung mundur 3 detik.
+- Menambahkan pengecekan agar anggota yang sudah absen pada sesi yang sama mendapat tanda **Anda sudah absen di sesi ini**.
