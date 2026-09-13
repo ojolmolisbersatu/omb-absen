@@ -328,3 +328,39 @@ details.advanced .form-grid{padding-bottom:12px}
 
 /* Attendance page intentionally has no green top header. */
 body:has(.attendance-app-card) .topbar{display:none!important}
+
+/* Single-screen member flow */
+html,body{min-height:100%;overflow-x:hidden}
+body:has(.attendance-app-card){overflow:hidden}
+.attendance-page{height:calc(100vh - 18px);height:calc(100svh - 18px);display:flex;flex-direction:column;justify-content:center}
+.attendance-app-card{max-height:calc(100vh - 24px);max-height:calc(100svh - 24px);overflow:hidden}
+.attendance-app-card .app-event-head{padding-bottom:10px}
+.attendance-app-card .verification-summary{margin-bottom:10px}
+.attendance-app-card .next-step-divider{margin:10px 0}
+.attendance-app-card .face-section{margin-top:0}
+.attendance-app-card .face-verifier{padding:10px}
+.attendance-app-card .face-frame{width:min(48vw,250px);height:min(48vw,250px)}
+.attendance-app-card.stage-face #memberSearchWrap,
+.attendance-app-card.stage-face .location-action,
+.attendance-app-card.stage-face .next-step-divider,
+.attendance-app-card.stage-face #summaryMemberRow,
+.attendance-app-card.stage-face #summaryLocationRow{display:none}
+.attendance-app-card.stage-face .face-section{display:block!important}
+.attendance-app-card.stage-face .face-section-head{margin-bottom:5px}
+.attendance-app-card.stage-face .face-section-head h2{font-size:25px}
+.attendance-app-card.stage-face .face-section-head p{font-size:12px}
+.attendance-app-card.stage-face .app-submit-area{margin-top:8px}
+.attendance-app-card.stage-face .submit-summary{padding-bottom:6px}
+.attendance-app-card.stage-face .face-note{font-size:10px}
+.already-absent{padding:12px;border:1px solid var(--brand);background:var(--brand-soft);color:var(--brand-dark);border-radius:12px;font-weight:800;font-size:13px;margin-top:10px}
+@media(max-width:480px){
+ .attendance-page{height:calc(100svh - 8px)}
+ .attendance-app-card{padding:14px!important;border-radius:18px}
+ .attendance-app-card .app-event-head h1{font-size:20px}
+ .attendance-app-card.stage-face .face-frame{width:min(58vw,235px);height:min(58vw,235px)}
+ .attendance-app-card.stage-face .face-verifier{padding:8px}
+ .attendance-app-card.stage-face .submit-cta{min-height:42px}
+}
+.attendance-app-card.stage-member .face-section,
+.attendance-app-card.stage-location .face-section{display:none!important}
+.attendance-app-card .face-frame video{transform:none!important}
