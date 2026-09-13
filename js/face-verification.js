@@ -16,7 +16,6 @@ function createFaceVerifier(opts) {
   let detector = null, stream = null, raf = 0;
   let running = false, captured = false, greenSince = 0;
   let lastStable = null, starting = false;
-  const HOLD_MS = 3000;
 
   const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite';
   const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm';
@@ -36,8 +35,8 @@ function createFaceVerifier(opts) {
   }
 
   function showCountdown(ms) {
-    // Intentionally hidden: verification progress is shown by the animated green ring.
-    countdown.classList.add('hidden');
+    countdown.classList.remove('hidden');
+    countdown.textContent = Math.max(0, (2000 - ms) / 1000).toFixed(1);
   }
 
   function evaluateDetection(detection) {
@@ -88,11 +87,11 @@ function createFaceVerifier(opts) {
       lastStable = { x: faceCx, y: faceCy, s: sizeRatio };
     }
 
-    setStatus('green', 'Tahan, sedang mendeteksi wajah...');
+    setStatus('green', 'Tahan, jangan gerak-gerak dulu...');
     const elapsed = now - greenSince;
     showCountdown(elapsed);
 
-    if (elapsed >= HOLD_MS && !captured) capturePhoto();
+    if (elapsed >= 2000 && !captured) capturePhoto();
   }
 
   function drawVideoToCanvas() {
@@ -121,7 +120,7 @@ function createFaceVerifier(opts) {
       video.classList.add('hidden');
       countdown.classList.add('hidden');
       retake.classList.remove('hidden');
-      setStatus('captured', '✓ Verifikasi wajah berhasil. Foto siap dikirim.');
+      setStatus('captured', 'Foto berhasil. Silakan cek sebelum dikirim.');
       opts.onCaptured?.(blob);
     }, 'image/jpeg', 0.82);
   }
