@@ -325,3 +325,6 @@ details.advanced .form-grid{padding-bottom:12px}
   .flow-status{grid-column:2;justify-self:start;margin-top:-4px}
   .face-frame{width:70vw;height:70vw}
 }
+
+/* Attendance page intentionally has no green top header. */
+body:has(.attendance-app-card) .topbar{display:none!important}
