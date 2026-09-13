@@ -17,11 +17,10 @@ function createFaceVerifier(opts) {
   let running = false, captured = false, greenSince = 0;
   let lastStable = null, starting = false;
 
-  const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite';
-  const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm';
-  const CDN_IMPORT = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm';
+const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm';
+const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite';
 
-  function setStatus(name, text) {
+   function setStatus(name, text) {
     frame.className = 'face-frame status-' + name;
     feedback.className = 'face-feedback ' + name;
     feedback.textContent = text;
