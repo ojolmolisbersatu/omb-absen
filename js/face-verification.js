@@ -19,6 +19,7 @@ function createFaceVerifier(opts) {
 
 const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm';
 const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite';
+const CDN_IMPORT = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm';
 
    function setStatus(name, text) {
     frame.className = 'face-frame status-' + name;
