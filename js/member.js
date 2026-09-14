@@ -70,8 +70,15 @@ function hideSubmitProgress() {
 function setStage(stage) {
   const card = document.querySelector('.attendance-app-card');
   if (!card) return;
-  card.classList.remove('stage-member','stage-location','stage-face');
-  card.classList.add('stage-' + stage);
+  const nextClass = 'stage-' + stage;
+  const currentClass = [...card.classList].find(c => c.startsWith('stage-'));
+  if (currentClass === nextClass) return;
+
+  // Tetap satu halaman: hanya isi tahap yang diganti, lalu beri transisi halus.
+  card.classList.remove('stage-member','stage-location','stage-face','stage-transition');
+  void card.offsetWidth;
+  card.classList.add(nextClass, 'stage-transition');
+  window.setTimeout(() => card.classList.remove('stage-transition'), 420);
 }
 
 async function checkAlreadyAbsent() {
