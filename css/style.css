@@ -368,3 +368,57 @@ body:has(.attendance-app-card){overflow:hidden}
 .face-frame.status-green .face-detect-ring{animation:ombFaceScan 1.15s linear infinite;border-color:#16a34a!important;box-shadow:0 0 0 5px rgba(22,163,74,.10),0 0 18px rgba(22,163,74,.22);}
 @keyframes ombFaceScan{0%{transform:rotate(0deg);filter:brightness(1)}50%{filter:brightness(1.18)}100%{transform:rotate(360deg);filter:brightness(1)}}
 .face-frame.status-red .face-detect-ring,.face-frame.status-yellow .face-detect-ring{animation:none;}
+
+
+/* ======================================================================
+   SINGLE-PAGE STEP TRANSITION
+   Pilih anggota -> lokasi -> verifikasi wajah, tanpa pindah halaman/scroll.
+   ====================================================================== */
+.attendance-app-card{position:relative}
+.attendance-app-card.stage-transition{animation:ombStageCardIn .38s ease both}
+
+/* Saat masuk tahap wajah, area kamera muncul sebagai pengganti area sebelumnya. */
+.attendance-app-card.stage-face .face-section{
+  animation:ombFacePanelIn .42s cubic-bezier(.22,.8,.25,1) both;
+}
+.attendance-app-card.stage-face .face-section-head,
+.attendance-app-card.stage-face .face-verifier,
+.attendance-app-card.stage-face .app-submit-area{
+  animation:ombFaceContentIn .48s ease .06s both;
+}
+
+/* Tahap lokasi tetap terasa sebagai satu panel yang sedang maju. */
+.attendance-app-card.stage-location .location-action{
+  animation:ombStepContentIn .35s ease both;
+}
+
+@keyframes ombStageCardIn{
+  0%{opacity:.72;transform:translateY(5px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+@keyframes ombFacePanelIn{
+  0%{opacity:0;transform:translateY(14px) scale(.985)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes ombFaceContentIn{
+  0%{opacity:0;transform:translateY(8px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+@keyframes ombStepContentIn{
+  0%{opacity:0;transform:translateY(7px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+/* Ringkasan tetap sederhana ketika pengguna sudah masuk verifikasi wajah. */
+.attendance-app-card.stage-face .app-event-head{text-align:center}
+.attendance-app-card.stage-face .app-event-head .eyebrow{margin-bottom:2px}
+.attendance-app-card.stage-face .face-section{border-top:0}
+
+@media(prefers-reduced-motion:reduce){
+  .attendance-app-card.stage-transition,
+  .attendance-app-card.stage-face .face-section,
+  .attendance-app-card.stage-face .face-section-head,
+  .attendance-app-card.stage-face .face-verifier,
+  .attendance-app-card.stage-face .app-submit-area,
+  .attendance-app-card.stage-location .location-action{animation:none!important}
+}
